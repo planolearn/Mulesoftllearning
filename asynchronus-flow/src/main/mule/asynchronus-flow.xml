@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="db9f4507-895a-46dc-8b21-68918f4b1f48" >
+		<http:listener-connection host="localhost" port="8080" />
+	</http:listener-config>
+	<flow name="asynchronus-flowFlow" doc:id="577d1a7e-9a04-4c82-8b38-4b21ce593e42" >
+		<http:listener doc:name="Listener" doc:id="2e5a7ada-d2ea-482e-84b9-c896388f0dea" config-ref="HTTP_Listener_config" path="/hello6"/>
+		<logger level="INFO" doc:name="Logger" doc:id="59d2a4cc-800a-4989-93da-9a013f7cda33" message="Hi I'm first flow"/>
+		<async doc:name="Async" doc:id="d9c26fef-4f45-4ab2-8fbb-96974c6bb30d" >
+			<logger level="INFO" doc:name="Logger" doc:id="ad0ac363-84a6-4f2c-acf9-f4137d52aec2" message="1"/>
+			<logger level="INFO" doc:name="Logger" doc:id="0b6ae767-e8da-49aa-93c6-9b28300eddab" message="2"/>
+			<logger level="INFO" doc:name="Logger" doc:id="836be5fe-b5e8-45a7-bd99-64e12da04e36" message="3"/>
+			<ee:transform doc:name="Transform Message" doc:id="d03be360-a94d-416c-b255-7db6f132ec54" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+"Hello World"]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="e9cdb123-078f-461e-9265-f4a07a2bd9db" message="4"/>
+			<logger level="INFO" doc:name="Logger" doc:id="8838d237-fadf-4307-93bf-b8fd9574fbc8" message="5"/>
+		</async>
+		<logger level="INFO" doc:name="Logger" doc:id="70153f74-1a78-4693-aa9f-476235f231fa" message="6"/>
+		<set-payload value="second message in asynchronus" doc:name="Set Payload" doc:id="a4f5b717-caa3-4729-aaee-c03353a37bbf" />
+		<logger level="INFO" doc:name="Logger" doc:id="38df670d-704e-44a8-9279-6abe519d806a" message="7"/>
+		<logger level="INFO" doc:name="Logger" doc:id="7cb6cc33-4cd7-4346-ad1c-bb4db7d79773" message="Main flow ended"/>
+	</flow>
+</mule>
